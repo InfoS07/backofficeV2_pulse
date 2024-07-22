@@ -244,12 +244,12 @@ const UserDetailsPage = () => {
     return (
         <DefaultLayout>
         <div className="p-4">
-            <h1 className="text-2xl font-bold mb-4">Détails de l'utilisateur</h1>
+            <h1 className="text-2xl font-bold mb-4">Détails de l&apos;utilisateur</h1>
             {loading && <p>Chargement en cours...</p>}
             {error && <p>Erreur: {error}</p>}
             
             {user && renderUserTable()}
-            {!loading && !user && <p>Aucun utilisateur à afficher pour l'ID sélectionné.</p>}
+            {!loading && !user && <p>Aucun utilisateur à afficher pour l&apos;ID sélectionné.</p>}
             
             <div className="mt-6">
                 <h2 className="text-xl font-semibold mb-2">Trainings</h2>

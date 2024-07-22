@@ -106,7 +106,7 @@ const TableOne = () => {
           </div>
           <div className="hidden p-2.5 text-center sm:block xl:p-5">
             <h5 className="text-sm font-medium uppercase xsm:text-base">
-              Nombre d'entrainements
+              Nombre d&apos;entrainements
             </h5>
           </div>
           <div className="hidden p-2.5 text-center sm:block xl:p-5">

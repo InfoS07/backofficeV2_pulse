@@ -241,7 +241,7 @@ const TableExercice = () => {
       {challengeToDelete && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-4 rounded shadow-lg">
-            <h2 className="text-lg font-bold">Supprimer le challenge "{challengeToDelete.name}" ?</h2>
+            <h2 className="text-lg font-bold">Supprimer le challenge {challengeToDelete.name} ?</h2>
             <div className="mt-4 flex justify-end">
               <button
                 onClick={closeDeleteModal}
