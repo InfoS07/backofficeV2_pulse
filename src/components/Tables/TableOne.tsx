@@ -1,117 +1,148 @@
-import { BRAND } from "@/types/brand";
-import Image from "next/image";
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
-const brandData: BRAND[] = [
-  {
-    logo: "/images/brand/brand-01.svg",
-    name: "Google",
-    visitors: 3.5,
-    revenues: "5,768",
-    sales: 590,
-    conversion: 4.8,
-  },
-  {
-    logo: "/images/brand/brand-02.svg",
-    name: "Twitter",
-    visitors: 2.2,
-    revenues: "4,635",
-    sales: 467,
-    conversion: 4.3,
-  },
-  {
-    logo: "/images/brand/brand-03.svg",
-    name: "Github",
-    visitors: 2.1,
-    revenues: "4,290",
-    sales: 420,
-    conversion: 3.7,
-  },
-  {
-    logo: "/images/brand/brand-04.svg",
-    name: "Vimeo",
-    visitors: 1.5,
-    revenues: "3,580",
-    sales: 389,
-    conversion: 2.5,
-  },
-  {
-    logo: "/images/brand/brand-05.svg",
-    name: "Facebook",
-    visitors: 3.5,
-    revenues: "6,768",
-    sales: 390,
-    conversion: 4.2,
-  },
-];
+// Définition de l'interface User
+interface User {
+  id: number;
+  last_name: string;
+  first_name: string;
+  profile_photo: string | null;
+  created_at: string;
+  username: string;
+  email: string;
+  birth_date: string;
+  uid: string;
+  points: number;
+}
+
+// Définition de l'interface Training
+interface Training {
+  id: number;
+  title: string;
+  description: string;
+  created_at: string;
+  repetitions: number;
+  author_id: number;
+}
 
 const TableOne = () => {
+  const [users, setUsers] = useState<User[]>([]);
+  const [trainings, setTrainings] = useState<Training[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get('/api/users');
+        if (response.data && Array.isArray(response.data.users)) {
+          // Trier les utilisateurs par nombre de points décroissant
+          const sortedUsers = response.data.users.sort((a: User, b: User) => b.points - a.points);
+          setUsers(sortedUsers);
+        } else {
+          setError('Format de réponse invalide');
+        }
+      } catch (error) {
+        setError('Échec de la récupération des utilisateurs');
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  useEffect(() => {
+    const fetchTrainings = async () => {
+      try {
+        const response = await axios.get('/api/trainings');
+        if (response.data && Array.isArray(response.data.trainings)) {
+          setTrainings(response.data.trainings);
+        } else {
+          setError('Format de réponse invalide');
+        }
+      } catch (error) {
+        setError('Échec de la récupération des entraînements');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTrainings();
+  }, []);
+
+  if (loading) {
+    return <div>Chargement...</div>;
+  }
+
+  if (error) {
+    return <div>Erreur: {error}</div>;
+  }
+
+  // Fonction pour compter le nombre d'entraînements pour un utilisateur
+  const getTrainingCountForUser = (userUid: string) => {
+    return trainings.filter(training => training.author_id.toString() == userUid).length;
+  };
+
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
       <h4 className="mb-6 text-xl font-semibold text-black dark:text-white">
-        Top Channels
+        Les meilleurs pulseurs
       </h4>
-
       <div className="flex flex-col">
         <div className="grid grid-cols-3 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-5">
           <div className="p-2.5 xl:p-5">
             <h5 className="text-sm font-medium uppercase xsm:text-base">
-              Source
+              Classement
             </h5>
           </div>
           <div className="p-2.5 text-center xl:p-5">
             <h5 className="text-sm font-medium uppercase xsm:text-base">
-              Visitors
+              Nom
             </h5>
           </div>
           <div className="p-2.5 text-center xl:p-5">
             <h5 className="text-sm font-medium uppercase xsm:text-base">
-              Revenues
+              Mail
             </h5>
           </div>
           <div className="hidden p-2.5 text-center sm:block xl:p-5">
             <h5 className="text-sm font-medium uppercase xsm:text-base">
-              Sales
+              Nombre d'entrainements
             </h5>
           </div>
           <div className="hidden p-2.5 text-center sm:block xl:p-5">
             <h5 className="text-sm font-medium uppercase xsm:text-base">
-              Conversion
+              Nombre de points
             </h5>
           </div>
         </div>
 
-        {brandData.map((brand, key) => (
+        {users.map((user, index) => (
           <div
             className={`grid grid-cols-3 sm:grid-cols-5 ${
-              key === brandData.length - 1
+              index === users.length - 1
                 ? ""
                 : "border-b border-stroke dark:border-strokedark"
             }`}
-            key={key}
+            key={user.id}
           >
-            <div className="flex items-center gap-3 p-2.5 xl:p-5">
-              <div className="flex-shrink-0">
-                <Image src={brand.logo} alt="Brand" width={48} height={48} />
-              </div>
-              <p className="hidden text-black dark:text-white sm:block">
-                {brand.name}
-              </p>
+            <div className="flex items-center justify-center p-2.5 xl:p-5">
+              <p className="text-black dark:text-white">{index + 1}</p> {/* Classement */}
             </div>
 
             <div className="flex items-center justify-center p-2.5 xl:p-5">
-              <p className="text-black dark:text-white">{brand.visitors}K</p>
+              <p className="text-black dark:text-white">{user.first_name} {user.last_name}</p>
             </div>
 
             <div className="flex items-center justify-center p-2.5 xl:p-5">
-              <p className="text-meta-3">${brand.revenues}</p>
+              <p className="text-meta-3">{user.email}</p>
             </div>
 
             <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
-              <p className="text-black dark:text-white">{brand.sales}</p>
+              <p className="text-black dark:text-white">{getTrainingCountForUser(user.uid)}</p> {/* Nombre d'entrainements */}
             </div>
 
             <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
-              <p className="text-meta-5">{brand.conversion}%</p>
+              <p className="text-meta-5">{user.points}</p>
             </div>
           </div>
         ))}

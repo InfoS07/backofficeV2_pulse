@@ -1,8 +1,9 @@
 "use client";
 
 import { ApexOptions } from "apexcharts";
-import React from "react";
 import dynamic from "next/dynamic";
+import axios from "axios";
+import React, { useEffect, useState } from 'react';
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
@@ -14,7 +15,7 @@ const options: ApexOptions = {
     position: "top",
     horizontalAlign: "left",
   },
-  colors: ["#3C50E0", "#80CAEE"],
+  colors: ["#3C50E0"],
   chart: {
     fontFamily: "Satoshi, sans-serif",
     height: 335,
@@ -27,7 +28,6 @@ const options: ApexOptions = {
       left: 0,
       opacity: 0.1,
     },
-
     toolbar: {
       show: false,
     },
@@ -51,13 +51,9 @@ const options: ApexOptions = {
     },
   ],
   stroke: {
-    width: [2, 2],
+    width: [2],
     curve: "straight",
   },
-  // labels: {
-  //   show: false,
-  //   position: "top",
-  // },
   grid: {
     xaxis: {
       lines: {
@@ -76,7 +72,7 @@ const options: ApexOptions = {
   markers: {
     size: 4,
     colors: "#fff",
-    strokeColors: ["#3056D3", "#80CAEE"],
+    strokeColors: ["#3056D3"],
     strokeWidth: 3,
     strokeOpacity: 0.9,
     strokeDashArray: 0,
@@ -88,21 +84,7 @@ const options: ApexOptions = {
     },
   },
   xaxis: {
-    type: "category",
-    categories: [
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-    ],
+    type: "datetime",
     axisBorder: {
       show: false,
     },
@@ -117,29 +99,63 @@ const options: ApexOptions = {
       },
     },
     min: 0,
-    max: 100,
   },
 };
 
-interface ChartOneState {
-  series: {
-    name: string;
-    data: number[];
-  }[];
+interface Training {
+  id: number;
+  title: string;
+  description: string;
+  created_at: string;
+  repetitions: number;
+  author_id: number;
 }
 
-const ChartOne: React.FC = () => {
-  const series = [
-      {
-        name: "Product One",
-        data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30, 45],
-      },
+const ChartOne = () => {
+  const [series, setSeries] = useState([{ name: 'Nombre d\'entrainements', data: [] as { x: string; y: number }[] }]);
 
-      {
-        name: "Product Two",
-        data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39, 51],
-      },
-    ]
+  useEffect(() => {
+    const fetchTrainings = async () => {
+      try {
+        const response = await axios.get('/api/trainings');
+        if (response.data && Array.isArray(response.data.trainings)) {
+          const trainings = response.data.trainings;
+          const trainingsByDate: { [key: string]: number } = {};
+
+          trainings.forEach((training: Training) => {
+            const date = new Date(training.created_at).toISOString().split('T')[0];
+            if (trainingsByDate[date]) {
+              trainingsByDate[date]++;
+            } else {
+              trainingsByDate[date] = 1;
+            }
+          });
+
+          const dates = Object.keys(trainingsByDate).sort();
+          const startDate = new Date(dates[0]);
+          const endDate = new Date(dates[dates.length - 1]);
+
+          const seriesData: { x: string; y: number }[] = [];
+          for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
+            const dateString = date.toISOString().split('T')[0];
+            seriesData.push({
+              x: dateString,
+              y: trainingsByDate[dateString] || 0
+            });
+          }
+
+          setSeries([{ name: 'Total Trainings', data: seriesData }]);
+        } else {
+          console.error('Trainings non trouvés');
+        }
+      } catch (error) {
+        console.error('Échec de la récupération des trainings');
+        console.error('Failed to fetch trainings:', error);
+      }
+    };
+
+    fetchTrainings();
+  }, []);
 
   return (
     <div className="col-span-12 rounded-sm border border-stroke bg-white px-5 pb-5 pt-7.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8">
@@ -150,32 +166,13 @@ const ChartOne: React.FC = () => {
               <span className="block h-2.5 w-full max-w-2.5 rounded-full bg-primary"></span>
             </span>
             <div className="w-full">
-              <p className="font-semibold text-primary">Total Revenue</p>
-              <p className="text-sm font-medium">12.04.2022 - 12.05.2022</p>
-            </div>
-          </div>
-          <div className="flex min-w-47.5">
-            <span className="mr-2 mt-1 flex h-4 w-full max-w-4 items-center justify-center rounded-full border border-secondary">
-              <span className="block h-2.5 w-full max-w-2.5 rounded-full bg-secondary"></span>
-            </span>
-            <div className="w-full">
-              <p className="font-semibold text-secondary">Total Sales</p>
-              <p className="text-sm font-medium">12.04.2022 - 12.05.2022</p>
+              <p className="font-semibold text-primary">Total Trainings</p>
+              <p className="text-sm font-medium">Date Range</p>
             </div>
           </div>
         </div>
         <div className="flex w-full max-w-45 justify-end">
-          <div className="inline-flex items-center rounded-md bg-whiter p-1.5 dark:bg-meta-4">
-            <button className="rounded bg-white px-3 py-1 text-xs font-medium text-black shadow-card hover:bg-white hover:shadow-card dark:bg-boxdark dark:text-white dark:hover:bg-boxdark">
-              Day
-            </button>
-            <button className="rounded px-3 py-1 text-xs font-medium text-black hover:bg-white hover:shadow-card dark:text-white dark:hover:bg-boxdark">
-              Week
-            </button>
-            <button className="rounded px-3 py-1 text-xs font-medium text-black hover:bg-white hover:shadow-card dark:text-white dark:hover:bg-boxdark">
-              Month
-            </button>
-          </div>
+         
         </div>
       </div>
 

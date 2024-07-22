@@ -9,13 +9,21 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^6.6.0",
+    "@fortawesome/react-fontawesome": "^0.2.2",
+    "@heroicons/react": "^2.1.5",
+    "@supabase/ssr": "^0.4.0",
+    "@supabase/supabase-js": "^2.44.4",
     "apexcharts": "^3.45.2",
+    "axios": "^1.7.2",
     "flatpickr": "^4.6.13",
     "jsvectormap": "^1.6.0",
     "next": "^14.2.4",
     "react": "^18",
     "react-apexcharts": "^1.4.1",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-router-dom": "^6.25.1",
+    "supabase": "^1.183.5"
   },
   "devDependencies": {
     "@types/node": "^20",
