@@ -17,7 +17,15 @@ export const addChallenge = async (challenge: any) => {
   return data;
 };
 
-
+export const deleteChallengeById = async (id: string) => {
+  const supabase = createClient();
+  const { error } = await supabase.from('challenges').delete().eq('id', id);
+  if (error) {
+    console.error('Erreur lors de la suppression du exercice:', error.message);
+    return false;
+  }
+  return true;
+};
 
 export const getChallengesByInvitedUserId = async (userId: string) => {
   const supabase = createClient();
