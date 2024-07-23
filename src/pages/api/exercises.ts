@@ -19,8 +19,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } else if (req.method === 'POST') {
     try {
       
-      const { title, description, pod_count, difficulty, repetitions } = req.body;
-      const newExercise = { title, description, pod_count, difficulty, repetitions };
+      const { title, description, pod_count, difficulty } = req.body;
+      const newExercise = { title, description, pod_count, difficulty };
 
       const addedExercise = await addExercise(newExercise);
 

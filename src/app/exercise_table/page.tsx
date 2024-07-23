@@ -40,7 +40,6 @@ const ExerciseTablePage: React.FC = () => {
     description: '',
     pod_count: '',
     difficulty: '',
-    repetitions: '',
     photo: '',
   });
 
@@ -99,7 +98,6 @@ const ExerciseTablePage: React.FC = () => {
       description: formValues.description,
       pod_count: formValues.pod_count.toString(),
       difficulty: formValues.difficulty,
-      repetitions: formValues.repetitions,
       photo: formValues.photo,
     };
 
@@ -113,7 +111,6 @@ const ExerciseTablePage: React.FC = () => {
         description: '',
         pod_count: '',
         difficulty: '',
-        repetitions: '',
         photo: '',
       });
     } catch (error) {
@@ -204,24 +201,7 @@ const ExerciseTablePage: React.FC = () => {
                       <option value="Difficile">Difficile</option>
                     </select>
                   </div>
-                  <div className="mb-4">
-                    <label htmlFor="repetitions" className="block text-gray-700">Répétitions</label>
-                    <select
-                      id="repetitions"
-                      name="repetitions"
-                      value={formValues.repetitions}
-                      onChange={handleFormChange}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                    >
-                      <option value="">Sélectionner</option>
-                      <option value="10">10</option>
-                      <option value="20">20</option>
-                      <option value="25">25</option>
-                      <option value="50">50</option>
-                      <option value="75">75</option>
-                      <option value="100">100</option>
-                    </select>
-                  </div>
+                  
                  
                   <button
                     type="submit"
