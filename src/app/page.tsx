@@ -25,7 +25,7 @@ export default function Login({
       return redirect("/login?message=Could not authenticate user");
     }
     if (email == "theogamiz31@gmail.com"){
-      return redirect("/dashboard");
+      return redirect("/");
     }
     
   };
