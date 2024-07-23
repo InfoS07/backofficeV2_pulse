@@ -20,8 +20,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   }  else if (req.method === 'POST') {
     try {
-      const { name, description, photo, points, exercice_id , end_at, start_at} = req.body;
-      const newChallenge = { name, description, photo, points, exercice_id , end_at, start_at};
+      const { name, description, points, exercice_id , end_at, start_at} = req.body;
+      const newChallenge = { name, description, points, exercice_id , end_at, start_at};
 
       // Assurez-vous que votre fonction addChallenge gère correctement l'insertion et génère un nouvel ID.
       const addedChallenge = await addChallenge(newChallenge);
