@@ -15,6 +15,7 @@ interface Challenge {
   exercice_id: number;
   start_at: string;
   end_at: string;
+  numbers: string;
 }
 
 // Définir l'interface pour l'exercice (pour le sélecteur)
@@ -49,6 +50,7 @@ const ChallengeTablePage = () => {
     exercice_id: '',
     start_at: '',
     end_at: '',
+    numbers:'',
   });
 
   // State pour gérer les erreurs et l'état de chargement
@@ -111,6 +113,7 @@ const ChallengeTablePage = () => {
       exercice_id: parseInt(formValues.exercice_id),
       start_at: formValues.start_at,
       end_at: formValues.end_at,
+      numbers:formValues.numbers,
     };
 
     try {
@@ -123,6 +126,7 @@ const ChallengeTablePage = () => {
         exercice_id: '',
         start_at: '',
         end_at: '',
+        numbers:'',
       });
       closeModal();
     } catch (error) {
@@ -179,6 +183,17 @@ const ChallengeTablePage = () => {
                       name="description"
                       type="text"
                       value={formValues.description}
+                      onChange={handleFormChange}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label htmlFor="points" className="block text-gray-700">Nombre de reps</label>
+                    <input
+                      id="numbers"
+                      name="numbers"
+                      type="number"
+                      value={formValues.numbers}
                       onChange={handleFormChange}
                       className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                     />
