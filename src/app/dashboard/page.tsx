@@ -131,7 +131,7 @@ const ECommerce: React.FC = () => {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
         <CardDataStats title="Nombre total d'entrainements" total={trainings.length.toString()} rate="" >
           <svg
-            className="fill-primary dark:fill-white"
+            className="fill-primary "
             width="22"
             height="16"
             viewBox="0 0 22 16"
@@ -150,7 +150,7 @@ const ECommerce: React.FC = () => {
         </CardDataStats>
         <CardDataStats title="Nombre de reports" total={reports.length.toString()} rate="" >
           <svg
-            className="fill-primary dark:fill-white"
+            className="fill-primary "
             width="20"
             height="22"
             viewBox="0 0 20 22"
